@@ -27,8 +27,6 @@ gantt
 
     上报功能&地区编码开发          :iter2_3, after iter2_2, 1d
 
-    // 新增：半月度上报相关任务（迭代2插入）
-
     半月度上报接口开发              :iter2_change1, after iter2_2, 1d
 
     半月度上报页面&提醒功能开发     :iter2_change2, after iter2_change1, 1d
@@ -41,8 +39,6 @@ gantt
 
     可视化&系统监控开发            :iter3_2, after iter3_1, 1d
 
-    // 新增：半月度报表完善（迭代3插入）
-
     半月度统计报表完善             :iter3_change1, after iter3_2, 1d
 
  性能/安全/兼容性优化           :iter3_3, after iter3_2, 2d
@@ -52,8 +48,6 @@ gantt
     迭代4：测试验收与上线部署      :milestone, iter4, after iter3, 7d
 
     验收测试&bug修复              :iter4_1, after iter3_4, 2d
-
-    // 修改：新增半月度培训相关说明
 
     上线准备&用户培训（含半月度）  :iter4_2, after iter4_1, 1d
 
