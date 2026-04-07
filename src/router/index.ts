@@ -66,6 +66,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '通知中心' }
   },
   {
+    path: '/password',
+    name: 'Password',
+    component: () => import('../views/Password.vue'),
+    meta: { title: '修改密码' }
+  },
+  {
     path: '/system',
     name: 'System',
     component: () => import('../views/System.vue'),

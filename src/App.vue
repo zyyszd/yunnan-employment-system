@@ -53,6 +53,10 @@
               <el-icon><bell /></el-icon>
               <span>通知中心</span>
             </el-menu-item>
+            <el-menu-item index="/password">
+              <el-icon><edit /></el-icon>
+              <span>修改密码</span>
+            </el-menu-item>
           </template>
 
           <!-- 市级用户菜单 -->
@@ -72,6 +76,10 @@
             <el-menu-item index="/notifications">
               <el-icon><bell /></el-icon>
               <span>通知管理</span>
+            </el-menu-item>
+            <el-menu-item index="/password">
+              <el-icon><edit /></el-icon>
+              <span>修改密码</span>
             </el-menu-item>
           </template>
 
@@ -104,6 +112,10 @@
             <el-menu-item index="/system">
               <el-icon><setting /></el-icon>
               <span>系统管理</span>
+            </el-menu-item>
+            <el-menu-item index="/password">
+              <el-icon><edit /></el-icon>
+              <span>修改密码</span>
             </el-menu-item>
           </template>
         </el-menu>
