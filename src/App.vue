@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <!-- 顶部导航栏 -->
-    <el-header class="app-header">
+    <!-- 顶部导航栏 - 仅非登录页面显示 -->
+    <el-header v-if="!isLoginPage" class="app-header">
       <div class="header-left">
         <h1>云南省企业就业失业数据采集系统</h1>
       </div>
@@ -13,8 +13,8 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>修改密码</el-dropdown-item>
+              <el-dropdown-item><router-link to="/profile">个人中心</router-link></el-dropdown-item>
+              <el-dropdown-item><router-link to="/password">修改密码</router-link></el-dropdown-item>
               <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -22,8 +22,8 @@
       </div>
     </el-header>
 
-    <!-- 主体内容区域 -->
-    <el-container class="app-body">
+    <!-- 主体内容区域 - 仅非登录页面显示侧栏 -->
+    <el-container v-if="!isLoginPage" class="app-body">
       <!-- 左侧菜单栏 -->
       <el-aside width="200px" class="app-sidebar">
         <el-menu
@@ -53,6 +53,10 @@
               <el-icon><bell /></el-icon>
               <span>通知中心</span>
             </el-menu-item>
+            <el-menu-item index="/profile">
+              <el-icon><user /></el-icon>
+              <span>个人中心</span>
+            </el-menu-item>
             <el-menu-item index="/password">
               <el-icon><edit /></el-icon>
               <span>修改密码</span>
@@ -76,6 +80,10 @@
             <el-menu-item index="/notifications">
               <el-icon><bell /></el-icon>
               <span>通知管理</span>
+            </el-menu-item>
+            <el-menu-item index="/profile">
+              <el-icon><user /></el-icon>
+              <span>个人中心</span>
             </el-menu-item>
             <el-menu-item index="/password">
               <el-icon><edit /></el-icon>
@@ -113,6 +121,10 @@
               <el-icon><setting /></el-icon>
               <span>系统管理</span>
             </el-menu-item>
+            <el-menu-item index="/profile">
+              <el-icon><user /></el-icon>
+              <span>个人中心</span>
+            </el-menu-item>
             <el-menu-item index="/password">
               <el-icon><edit /></el-icon>
               <span>修改密码</span>
@@ -130,23 +142,44 @@
         </router-view>
       </el-main>
     </el-container>
+
+    <!-- 登录页面直接显示内容，不使用布局 -->
+    <router-view v-if="isLoginPage" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { 
-  House, Edit, Document, Time, Bell, Check, Upload, 
-  DataAnalysis, Setting, ArrowDown
+import { ref, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import {
+  House, Edit, Document, Time, Bell, Check, Upload,
+  DataAnalysis, Setting, ArrowDown, User
 } from '@element-plus/icons-vue'
 
-// 用户角色
-const userRole = ref('企业') // 可切换为 '市级' 或 '省级'
+const router = useRouter()
+const route = useRoute()
+
+// 判断是否是登录页面
+const isLoginPage = computed(() => route.path === '/login')
+
+// 用户角色 - 使用计算属性实时读取localStorage
+const userRole = computed(() => {
+  return localStorage.getItem('userRole') || ''
+})
 
 // 退出登录
 const logout = () => {
-  alert('已退出登录')
+  // 清除localStorage
+  localStorage.removeItem('userRole')
+  localStorage.removeItem('username')
+  // 使用window.location.replace强制跳转到登录页，并替换历史记录
+  window.location.replace('/login')
 }
+
+// 初始化
+onMounted(() => {
+  // 不再自动设置默认角色，让用户必须登录
+})
 </script>
 
 <style scoped>

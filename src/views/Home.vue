@@ -28,11 +28,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { House } from '@element-plus/icons-vue'
 
-// 用户角色
-const userRole = ref('企业') // 可切换为 '市级' 或 '省级'
+// 用户角色 - 从localStorage读取
+const userRole = computed(() => {
+  return localStorage.getItem('userRole') || '企业'
+})
 
 // 当前日期
 const currentDate = ref('')
