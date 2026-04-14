@@ -24,26 +24,102 @@
         <el-statistic title="通知数量" :value="notifications.length" />
       </div>
     </el-card>
+
+    <el-card class="quick-actions" v-if="userRole === '企业'">
+      <template #header>
+        <div class="card-title">快捷操作</div>
+      </template>
+      <div class="action-grid">
+        <div class="action-item" @click="$router.push('/register')">
+          <el-icon><edit /></el-icon>
+          <span>企业备案</span>
+        </div>
+        <div class="action-item" @click="$router.push('/report')">
+          <el-icon><document /></el-icon>
+          <span>数据填报</span>
+        </div>
+        <div class="action-item" @click="$router.push('/history')">
+          <el-icon><time /></el-icon>
+          <span>历史查询</span>
+        </div>
+        <div class="action-item" @click="$router.push('/notifications')">
+          <el-icon><bell /></el-icon>
+          <span>通知中心</span>
+        </div>
+      </div>
+    </el-card>
+
+    <el-card class="quick-actions" v-else-if="userRole === '市级'">
+      <template #header>
+        <div class="card-title">快捷操作</div>
+      </template>
+      <div class="action-grid">
+        <div class="action-item" @click="$router.push('/audit')">
+          <el-icon><check /></el-icon>
+          <span>数据审核</span>
+        </div>
+        <div class="action-item" @click="$router.push('/report')">
+          <el-icon><document /></el-icon>
+          <span>数据查看</span>
+        </div>
+        <div class="action-item" @click="$router.push('/notifications')">
+          <el-icon><bell /></el-icon>
+          <span>通知管理</span>
+        </div>
+      </div>
+    </el-card>
+
+    <el-card class="quick-actions" v-else-if="userRole === '省级'">
+      <template #header>
+        <div class="card-title">快捷操作</div>
+      </template>
+      <div class="action-grid">
+        <div class="action-item" @click="$router.push('/register-audit')">
+          <el-icon><edit /></el-icon>
+          <span>备案审核</span>
+        </div>
+        <div class="action-item" @click="$router.push('/final-audit')">
+          <el-icon><check /></el-icon>
+          <span>数据终审</span>
+        </div>
+        <div class="action-item" @click="$router.push('/national-report')">
+          <el-icon><upload /></el-icon>
+          <span>国家上报</span>
+        </div>
+        <div class="action-item" @click="$router.push('/analysis')">
+          <el-icon><data-analysis /></el-icon>
+          <span>数据分析</span>
+        </div>
+      </div>
+    </el-card>
+
+    <el-card class="notifications-card">
+      <template #header>
+        <div class="card-title">最新通知</div>
+      </template>
+      <div class="notification-list">
+        <div v-for="item in notifications" :key="item.id" class="notification-item">
+          <div class="notification-title">{{ item.title }}</div>
+          <div class="notification-content">{{ item.content }}</div>
+          <div class="notification-time">{{ item.time }}</div>
+        </div>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { House } from '@element-plus/icons-vue'
+import { House, Edit, Document, Time, Bell, Check, Upload, DataAnalysis } from '@element-plus/icons-vue'
 
-// 用户角色 - 从localStorage读取
 const userRole = computed(() => {
   return localStorage.getItem('userRole') || '企业'
 })
 
-// 当前日期
 const currentDate = ref('')
-
-// 待办事项统计
 const todoCount = ref(5)
 const completedCount = ref(12)
 
-// 通知列表
 const notifications = ref([
   {
     id: 1,
@@ -59,9 +135,7 @@ const notifications = ref([
   }
 ])
 
-// 初始化
 onMounted(() => {
-  // 设置当前日期
   const now = new Date()
   currentDate.value = now.toLocaleDateString()
 })
@@ -114,5 +188,128 @@ onMounted(() => {
 .welcome-stats {
   display: flex;
   justify-content: space-around;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.quick-actions {
+  margin-top: 20px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 10px;
+  border-radius: 8px;
+  background-color: #f5f7fa;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.action-item:hover {
+  background-color: #e6f0ff;
+  transform: translateY(-2px);
+}
+
+.action-item .el-icon {
+  font-size: 28px;
+  color: #1890ff;
+  margin-bottom: 8px;
+}
+
+.action-item span {
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+}
+
+.notifications-card {
+  margin-top: 20px;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notification-item {
+  padding: 12px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+  border-left: 3px solid #1890ff;
+}
+
+.notification-title {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.notification-content {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .content-section {
+    padding: 12px;
+  }
+
+  .content-section h2 {
+    font-size: 16px;
+  }
+
+  .welcome-content {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .welcome-icon {
+    font-size: 48px;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+
+  .welcome-stats {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .action-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .action-item {
+    padding: 12px 8px;
+  }
+
+  .action-item .el-icon {
+    font-size: 24px;
+  }
+
+  .action-item span {
+    font-size: 11px;
+  }
 }
 </style>

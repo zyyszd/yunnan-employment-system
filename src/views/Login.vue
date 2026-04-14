@@ -31,12 +31,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <div class="login-tips">
-        <p>测试账号：</p>
-        <p>企业用户：enterprise1 / 123456</p>
-        <p>市级管理员：city1 / 123456</p>
-        <p>省级管理员：province1 / 123456</p>
-      </div>
+
     </el-card>
   </div>
 </template>
@@ -126,16 +121,5 @@ const handleLogin = () => {
   padding: 20px 0;
 }
 
-.login-tips {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #666;
-}
 
-.login-tips p {
-  margin: 5px 0;
-}
 </style>

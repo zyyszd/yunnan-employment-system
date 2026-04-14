@@ -30,6 +30,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '数据填报', requiresAuth: true }
   },
   {
+    path: '/data-view',
+    name: 'DataView',
+    component: () => import('../views/DataView.vue'),
+    meta: { title: '数据查看', requiresAuth: true }
+  },
+  {
     path: '/history',
     name: 'History',
     component: () => import('../views/History.vue'),
