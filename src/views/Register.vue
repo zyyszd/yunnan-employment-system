@@ -66,8 +66,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { api } from '../utils/api'
 
-// 地区选择选项
 const regionOptions = ref([
   {
     value: '530000',
@@ -96,7 +97,6 @@ const regionOptions = ref([
   }
 ])
 
-// 企业备案表单
 const registerForm = ref({
   region: [],
   orgCode: '',
@@ -112,13 +112,29 @@ const registerForm = ref({
   email: ''
 })
 
-// 提交备案
-const submitRegister = () => {
-  // 模拟提交
-  alert('备案信息已提交，等待审核')
+const submitRegister = async () => {
+  if (!registerForm.value.companyName) {
+    ElMessage.error('请填写企业名称')
+    return
+  }
+
+  try {
+    const regionCode = registerForm.value.region[registerForm.value.region.length - 1] || ''
+    await api.companies.create({
+      companyName: registerForm.value.companyName,
+      unifiedCreditCode: registerForm.value.orgCode,
+      legalPerson: registerForm.value.contact,
+      contactPhone: registerForm.value.phone,
+      address: registerForm.value.address,
+      regionCode: regionCode,
+      businessScope: registerForm.value.business
+    })
+    ElMessage.success('备案信息已提交，等待审核')
+  } catch (error: any) {
+    ElMessage.error(error.message || '提交失败')
+  }
 }
 
-// 重置表单
 const resetForm = () => {
   registerForm.value = {
     region: [],

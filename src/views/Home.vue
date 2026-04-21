@@ -111,33 +111,38 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { House, Edit, Document, Time, Bell, Check, Upload, DataAnalysis } from '@element-plus/icons-vue'
+import { api } from '../utils/api'
 
 const userRole = computed(() => {
   return localStorage.getItem('userRole') || '企业'
 })
 
 const currentDate = ref('')
-const todoCount = ref(5)
-const completedCount = ref(12)
+const todoCount = ref(0)
+const completedCount = ref(0)
+const notifications = ref<Array<{id: number; title: string; content: string; time: string}>>([])
 
-const notifications = ref([
-  {
-    id: 1,
-    title: '上报提醒',
-    content: '2026年4月月度数据上报截止时间为4月30日，请及时完成上报。',
-    time: '2026-04-27'
-  },
-  {
-    id: 2,
-    title: '系统通知',
-    content: '系统将于2026年5月1日进行维护升级，届时系统将暂时无法访问。',
-    time: '2026-04-25'
-  }
-])
-
-onMounted(() => {
+onMounted(async () => {
   const now = new Date()
   currentDate.value = now.toLocaleDateString()
+
+  try {
+    const notificationData = await api.notifications.list()
+    notifications.value = notificationData.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      content: item.content,
+      time: new Date(item.created_at).toLocaleDateString()
+    }))
+
+    const employmentData = await api.employment.list()
+    const pendingData = employmentData.filter((item: any) => item.status === '待审核')
+    const completedData = employmentData.filter((item: any) => item.status === '已通过')
+    todoCount.value = pendingData.length
+    completedCount.value = completedData.length
+  } catch (error) {
+    console.error('Failed to fetch data:', error)
+  }
 })
 </script>
 

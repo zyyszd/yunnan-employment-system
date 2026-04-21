@@ -59,11 +59,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { api } from '../utils/api'
 
-// 数据填报周期类型
 const reportPeriodType = ref('月度')
 
-// 数据填报表单
 const reportForm = ref({
   period: new Date(),
   baseEmployment: 100,
@@ -71,21 +71,54 @@ const reportForm = ref({
   newEmployment: 0,
   reduceEmployment: 0,
   unemployment: 0,
-  unemploymentReasons: [],
+  unemploymentReasons: [] as string[],
   remarks: ''
 })
 
-// 暂存填报数据
-const saveDraft = () => {
-  alert('数据已暂存')
+const saveDraft = async () => {
+  try {
+    await api.employment.create({
+      period: formatDate(reportForm.value.period),
+      periodType: reportPeriodType.value,
+      baseEmployment: reportForm.value.baseEmployment,
+      currentEmployment: reportForm.value.currentEmployment,
+      newEmployment: reportForm.value.newEmployment,
+      reduceEmployment: reportForm.value.reduceEmployment,
+      unemployment: reportForm.value.unemployment,
+      unemploymentReasons: reportForm.value.unemploymentReasons,
+      remarks: reportForm.value.remarks
+    })
+    ElMessage.success('数据已暂存')
+  } catch (error: any) {
+    ElMessage.error(error.message || '暂存失败')
+  }
 }
 
-// 提交填报数据
-const submitReport = () => {
-  alert('数据已上报，等待审核')
+const submitReport = async () => {
+  try {
+    await api.employment.create({
+      period: formatDate(reportForm.value.period),
+      periodType: reportPeriodType.value,
+      baseEmployment: reportForm.value.baseEmployment,
+      currentEmployment: reportForm.value.currentEmployment,
+      newEmployment: reportForm.value.newEmployment,
+      reduceEmployment: reportForm.value.reduceEmployment,
+      unemployment: reportForm.value.unemployment,
+      unemploymentReasons: reportForm.value.unemploymentReasons,
+      remarks: reportForm.value.remarks
+    })
+    ElMessage.success('数据已上报，等待审核')
+  } catch (error: any) {
+    ElMessage.error(error.message || '上报失败')
+  }
 }
 
-// 重置填报表单
+const formatDate = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+}
+
 const resetReportForm = () => {
   reportForm.value = {
     period: new Date(),

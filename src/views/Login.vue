@@ -40,6 +40,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { api } from '../utils/api'
 
 const router = useRouter()
 
@@ -61,35 +62,21 @@ const rules = {
 }
 
 const handleLogin = () => {
-  loginFormRef.value?.validate((valid: boolean) => {
+  loginFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
       loading.value = true
-
-      // 模拟登录验证
-      setTimeout(() => {
-        if (loginForm.value.username === 'enterprise1' && loginForm.value.password === '123456') {
-          localStorage.setItem('userRole', '企业')
-          localStorage.setItem('username', loginForm.value.username)
-          ElMessage.success('登录成功')
-          // 跳转到首页并强制重新加载
-          window.location.href = '/home'
-        } else if (loginForm.value.username === 'city1' && loginForm.value.password === '123456') {
-          localStorage.setItem('userRole', '市级')
-          localStorage.setItem('username', loginForm.value.username)
-          ElMessage.success('登录成功')
-          // 跳转到首页并强制重新加载
-          window.location.href = '/home'
-        } else if (loginForm.value.username === 'province1' && loginForm.value.password === '123456') {
-          localStorage.setItem('userRole', '省级')
-          localStorage.setItem('username', loginForm.value.username)
-          ElMessage.success('登录成功')
-          // 跳转到首页并强制重新加载
-          window.location.href = '/home'
-        } else {
-          ElMessage.error('用户名或密码错误')
-        }
+      try {
+        const response = await api.auth.login(loginForm.value.username, loginForm.value.password)
+        localStorage.setItem('token', response.token)
+        localStorage.setItem('userRole', response.user.role)
+        localStorage.setItem('username', response.user.username)
+        ElMessage.success('登录成功')
+        window.location.href = '/home'
+      } catch (error: any) {
+        ElMessage.error(error.message || '登录失败')
+      } finally {
         loading.value = false
-      }, 500)
+      }
     }
   })
 }

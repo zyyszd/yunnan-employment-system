@@ -294,10 +294,9 @@ const userRole = computed(() => {
 
 // 退出登录
 const logout = () => {
-  // 清除localStorage
+  localStorage.removeItem('token')
   localStorage.removeItem('userRole')
   localStorage.removeItem('username')
-  // 使用window.location.replace强制跳转到登录页，并替换历史记录
   window.location.replace('/login')
 }
 
